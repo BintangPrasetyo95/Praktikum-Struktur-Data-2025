@@ -8,8 +8,8 @@ struct node
 } *start, *newptr, *save, *ptr, *rear;
 
 node *create_new_node(int);
-void insert_at_beg(node *);
-void insert_at_end(node *);
+void insert_at_beg(node *); // insert in beg
+void insert_at_end(node *); // insert in end
 void display(node *);
 void delete_node();
 
