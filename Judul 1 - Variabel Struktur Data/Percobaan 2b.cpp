@@ -18,6 +18,7 @@ int main()
     start = rear = NULL;
     int c;
     char choice = 'y';
+
     while (choice == 'y' || choice == 'Y')
     {
         cout << "Nilai baru = ";
@@ -30,19 +31,23 @@ int main()
         }
         else
         {
-            cout << "Node baru tidak dapat dibuat";
+            cout << "Node baru tidak dapat dibuat" << endl;
             exit(1);
         }
+
         insert_node(newptr);
         cout << "Node dimasukkan ke list" << endl;
-        cout << "Mau membuat node baru? (y/n)";
+
+        cout << "Mau membuat node baru? (y/n): ";
         cin >> choice;
     }
+
     int direction;
     cout << "1. Maju" << endl;
     cout << "2. Mundur" << endl;
-    cout << "Arah transversal yang mana?";
+    cout << "Arah traversal yang mana?: ";
     cin >> direction;
+
     switch (direction)
     {
     case 1:
@@ -50,9 +55,11 @@ int main()
         traverseForward(start);
         break;
     case 2:
-        cout << "Transversal mundur: ";
+        cout << "Traversal mundur: ";
         traverseBackward(rear);
+        break;
     }
+
     return 0;
 }
 
@@ -61,6 +68,7 @@ node *create_new_node(int n)
     ptr = new node;
     ptr->data = n;
     ptr->next = NULL;
+    ptr->prev = NULL;
     return ptr;
 }
 
@@ -73,6 +81,7 @@ void insert_node(node *np)
     else
     {
         rear->next = np;
+        np->prev = rear;
         rear = np;
     }
 }

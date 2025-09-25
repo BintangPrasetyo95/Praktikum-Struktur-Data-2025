@@ -8,8 +8,8 @@ struct node
 } *start, *newptr, *save, *ptr, *rear;
 
 node *create_new_node(int);
-void insert_at_beg(node *); // insert in beg
-void insert_at_end(node *); // insert in end
+void insert_at_beg(node *);
+void insert_at_end(node *);
 void display(node *);
 void delete_node();
 
@@ -19,9 +19,10 @@ int main()
     int c;
     char choice = 'y';
     int insert;
+
     while (choice == 'y' || choice == 'Y')
     {
-        cout << "Nilai baru = ";
+        cout << "Nilai baru : ";
         cin >> c;
         cout << "Membuat node baru" << endl;
         newptr = create_new_node(c);
@@ -31,13 +32,15 @@ int main()
         }
         else
         {
-            cout << "Node baru tidak dapat dibuat";
+            cout << "Node baru tidak dapat dibuat" << endl;
             exit(1);
         }
-        cout << "1. Depan \n";
-        cout << "2. Belakang \n";
-        cout << "Masukkan dimana ?";
+
+        cout << "1. Depan\n";
+        cout << "2. Belakang\n";
+        cout << "Masukkan dimana? ";
         cin >> insert;
+
         switch (insert)
         {
         case 1:
@@ -49,22 +52,26 @@ int main()
             cout << "Node dimasukkan di akhir list" << endl;
             break;
         }
-        cout << "List :";
+
+        cout << "List : ";
         display(start);
-        cout << "Mau membuat node baru? (y/n)";
+
+        cout << "Mau membuat node baru? (y/n): ";
         cin >> choice;
     }
     do
     {
-        cout << "List:";
+        cout << "List : ";
         display(start);
-        cout << "Mau menghapus node pertama? (y/n)";
+
+        cout << "Mau menghapus node pertama? (y/n): ";
         cin >> choice;
         if (choice == 'y' || choice == 'Y')
         {
             delete_node();
         }
     } while (choice == 'y' || choice == 'Y');
+
     return 0;
 }
 
@@ -76,7 +83,7 @@ node *create_new_node(int n)
     return ptr;
 }
 
-void insert_in_beg(node *np)
+void insert_at_beg(node *np)
 {
     if (start == NULL)
     {
@@ -86,11 +93,11 @@ void insert_in_beg(node *np)
     {
         save = start;
         start = np;
-        np->next = start;
+        np->next = save;
     }
 }
 
-void insert_in_end(node *np)
+void insert_at_end(node *np)
 {
     if (start == NULL)
     {
@@ -113,5 +120,16 @@ void delete_node()
     {
         ptr = start;
         start = start->next;
+        delete ptr;
     }
+}
+
+void display(node *np)
+{
+    while (np != NULL)
+    {
+        cout << np->data << " ";
+        np = np->next;
+    }
+    cout << endl;
 }

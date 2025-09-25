@@ -94,15 +94,19 @@ int main()
     push_back(v, 10);
     push_back(v, 20);
     push_back(v, 30);
+
     cout << "Isi vector: ";
     display(v);
+
     cout << "Elemen ke-1 = " << get(v, 1) << endl;
     set(v, 1, 99);
     cout << "Set elemen ke-1 jadi 99: ";
     display(v);
+
     pop_back(v);
     cout << "Setelah pop_back: ";
     display(v);
+
     cout << "Ukuran vector sekarang = " << size(v) << endl;
     clear(v);
     return 0;
