@@ -5,7 +5,7 @@ void tukar(int *x, int *y);
 int main()
 {
     int n;
-    int arr[3];
+    int arr[1005];
     cin >> n;
 
     for (int i = 0; i < n; i++)
