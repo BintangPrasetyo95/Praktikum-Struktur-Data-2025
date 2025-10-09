@@ -50,7 +50,7 @@ void resizeNasabah(VectorNasabah &v, int newCap)
     v.capacity = newCap;
 }
 
-void pushNasabah(VectorNasabah &, Nasabah nasabah)
+void pushNasabah(VectorNasabah &v, Nasabah nasabah)
 {
     if (v.length == v.capacity)
     {
@@ -62,7 +62,7 @@ void pushNasabah(VectorNasabah &, Nasabah nasabah)
 
 Nasabah getNasabah(VectorNasabah &v, int index)
 {
-    {
+    if (index >= 0) {
         return v.data[index];
     }
     return {"", "", "", 0}; // jika salah
@@ -70,9 +70,9 @@ Nasabah getNasabah(VectorNasabah &v, int index)
 
 void setNasabah(VectorNasabah &v, int index, Nasabah nasabah)
 {
-    if (index >= 0 && index < v.length){
-        
-    {
+    if (index >= 0 && index < v.length) {
+        v.data[index] = nasabah;
+    }
 }
 
 int sizeNasabah(VectorNasabah &v)

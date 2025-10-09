@@ -82,6 +82,7 @@ int main() {
     cin >> n;
 
     cout << "Masukkan IPK mahasiswa:\n";
+    
     for (int i = 0; i < n; i++) {
         cout << "Mahasiswa ke-" << i + 1 << ": ";
         cin >> arr[i];
