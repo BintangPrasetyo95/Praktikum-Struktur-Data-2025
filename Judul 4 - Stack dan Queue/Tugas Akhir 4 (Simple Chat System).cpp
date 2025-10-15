@@ -3,19 +3,19 @@
 #include <ctime>
 using namespace std;
 
-const int MAX = 100;
-struct Message
+const int MAX = 1000;
+struct Notulensi
 {
     string text;
     string time;
 };
 
-Message st[MAX];
+Notulensi st[MAX];
 int topIdx = -1;
 
-bool isEmpty();
+bool isEmpty(); 
 bool isFull();
-void sendMessage(const string &msg);
+void insertNotulensi(const string &ntl);
 void undo();
 void peek();
 void display();
@@ -34,11 +34,11 @@ int main()
 
     do
     {
-        cout << "\n=== SIMPLE CHAT (Stack with Time) ===\n";
-        cout << "1. Send Message\n";
-        cout << "2. Undo (hapus pesan terakhir)\n";
-        cout << "3. Peek (lihat pesan terakhir)\n";
-        cout << "4. Tampilkan chat history\n";
+        cout << "\n=== Aplikasi Notulensi Musyawarah Besar ===\n";
+        cout << "1. Input Notulensi\n";
+        cout << "2. Undo (hapus notulensi terakhir)\n";
+        cout << "3. Peek (lihat notulensi terakhir)\n";
+        cout << "4. Tampilkan semua notulensi\n";
         cout << "5. Keluar\n";
         cout << "Pilih: ";
         if (!(cin >> pilih))
@@ -52,9 +52,9 @@ int main()
 
         if (pilih == 1)
         {
-            cout << "Ketik pesan: ";
+            cout << "Ketik text notulensi: ";
             getline(cin, temp);
-            sendMessage(temp);
+            insertNotulensi(temp);
         }
         else if (pilih == 2)
         {
@@ -91,33 +91,33 @@ bool isFull()
     return topIdx == MAX - 1;
 }
 
-void sendMessage(const string &msg)
+void insertNotulensi(const string &ntl)
 {
     if (isFull())
     {
-        cout << "Chat penuh, tidak bisa mengirim pesan.\n";
+        cout << "Notulensi Penuh!, tidak bisa disimpan.\n";
         return;
     }
 
-    Message newMsg;
-    newMsg.text = msg;
-    newMsg.time = getCurrentTime();
+    Notulensi newNotulensi;
+    newNotulensi.text = ntl;
+    newNotulensi.time = getCurrentTime();
 
-    st[++topIdx] = newMsg;
+    st[++topIdx] = newNotulensi;
 
-    cout << "[" << newMsg.time << "] You: " << newMsg.text << "\n";
+    cout << "[" << newNotulensi.time << "] You: " << newNotulensi.text << "\n";
 }
 
 void undo()
 {
     if (isEmpty())
     {
-        cout << "Tidak ada pesan untuk di-undo.\n";
+        cout << "Tidak ada Notulensi untuk di-undo.\n";
         return;
     }
 
-    Message last = st[topIdx--];
-    cout << "Undo berhasil. Pesan \"" << last.text
+    Notulensi last = st[topIdx--];
+    cout << "Undo berhasil. Notulensi \"" << last.text
          << "\" (" << last.time << ") dihapus.\n";
 }
 
@@ -125,23 +125,23 @@ void peek()
 {
     if (isEmpty())
     {
-        cout << "Chat kosong.\n";
+        cout << "Notulensi kosong.\n";
         return;
     }
 
-    Message top = st[topIdx];
-    cout << "Pesan teratas: [" << top.time << "] " << top.text << "\n";
+    Notulensi top = st[topIdx];
+    cout << "Notulensi teratas: [" << top.time << "] " << top.text << "\n";
 }
 
 void display()
 {
     if (isEmpty())
     {
-        cout << "Chat kosong.\n";
+        cout << "Notulensi kosong.\n";
         return;
     }
 
-    cout << "History chat (teratas -> terbawah):\n";
+    cout << "Notulensi:\n";
     for (int i = topIdx; i >= 0; --i)
     {
         cout << (topIdx - i + 1) << ". [" << st[i].time << "] "
