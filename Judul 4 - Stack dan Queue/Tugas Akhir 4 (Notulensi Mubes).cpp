@@ -116,7 +116,7 @@ void undo()
         return;
     }
 
-    Notulensi last = st[topIdx--];
+    Notulensi --;
     cout << "Undo berhasil. Notulensi \"" << last.text
          << "\" (" << last.time << ") dihapus.\n";
 }

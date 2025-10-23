@@ -31,7 +31,7 @@ bool searchWord(Node *root, string word)
         cout << "Kata tidak ditemukan.\n";
         return false;
     }
-    if (root->word == word)
+    if ( )
     {
         cout << "Arti: " << root->meaning << "\n";
         return true;
