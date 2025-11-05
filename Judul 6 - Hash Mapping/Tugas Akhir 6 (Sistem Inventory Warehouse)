@@ -1,0 +1,318 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+const int SIZE = 10;
+
+struct Barang
+{
+    int key;
+    string nama_barang;
+    Barang *next;
+};
+
+int hashFunction(int key);
+void initTable(Barang *table[]);
+void tambahBarang(Barang *table[], int key, string nama_barang);
+Barang *cariBarang(Barang *table[], int key);
+void hapusBarang(Barang *table[], int key);
+void tampilkanInventory(Barang *table[]);
+void tampilkanDetailBarang(Barang *table[], int key);
+void hitungTotalBarang(Barang *table[]);
+void cariPerRak(Barang *table[], int rak);
+void cleanupTable(Barang *table[]);
+void menu();
+
+int main()
+{
+    Barang *table[SIZE];
+    initTable(table);
+
+    cout << "\n[DEMO] Mengisi data awal...\n";
+    tambahBarang(table, 1, "Laptop Dell");
+    tambahBarang(table, 11, "Mouse Logitech");
+    tambahBarang(table, 21, "Keyboard Mech");
+    tambahBarang(table, 2, "Monitor LG 24\"");
+    tambahBarang(table, 35, "Flashdisk 32GB");
+    tambahBarang(table, 15, "SSD 512GB");
+
+    cout << "\n[INFO] Perhatikan collision: Kode 1, 11, 21 akan hash ke rak yang sama!\n";
+    cout << "[INFO] Index hash table = Nomor Rak tempat barang disimpan.\n";
+
+    int pilihan;
+    do
+    {
+        menu();
+        cin >> pilihan;
+
+        switch (pilihan)
+        {
+        case 1:
+        {
+            int key;
+            string nama_barang;
+            cout << "\nKode Barang: ";
+            cin >> key;
+            cin.ignore();
+            cout << "Nama Barang: ";
+            getline(cin, nama_barang);
+            tambahBarang(table, key, nama_barang);
+            break;
+        }
+        case 2:
+        {
+            int key;
+            cout << "\nMasukkan Kode Barang: ";
+            cin >> key;
+            tampilkanDetailBarang(table, key);
+            break;
+        }
+        case 3:
+        {
+            int key;
+            cout << "\nKode Barang yang akan dihapus: ";
+            cin >> key;
+            hapusBarang(table, key);
+            break;
+        }
+        case 4:
+        {
+            tampilkanInventory(table);
+            break;
+        }
+        case 5:
+        {
+            hitungTotalBarang(table);
+            break;
+        }
+        case 6:
+        {
+            int rak;
+            cout << "\nMasukkan Nomor Rak: ";
+            cin >> rak;
+            cariPerRak(table, rak);
+            break;
+        }
+        case 0:
+        {
+            cout << "\n[INFO] Membersihkan memori...\n";
+            cleanupTable(table);
+            cout << "[SUKSES] Terima kasih telah menggunakan sistem ini!\n\n";
+            break;
+        }
+        default:
+        {
+            cout << "\n[ERROR] Pilihan tidak valid!\n";
+        }
+        }
+    } while (pilihan != 0);
+
+    return 0;
+}
+
+int hashFunction(int key)
+{
+    return (key % SIZE + SIZE) % SIZE;
+}
+
+void initTable(Barang *table[])
+{
+    for (int i = 0; i < SIZE; i++)
+    {
+        table[i] = nullptr;
+    }
+}
+
+void tambahBarang(Barang *table[], int key, string nama_barang)
+{
+    int index = hashFunction(key);
+    Barang *cur = table[index];
+
+    while (cur != nullptr)
+    {
+        if (cur->key == key)
+        {
+            cout << "\n[INFO] Barang dengan kode " << key << " sudah ada. Data diupdate.\n";
+            cur->nama_barang = nama_barang;
+            return;
+        }
+        cur = cur->next;
+    }
+
+    Barang *baru = new Barang;
+    baru->key = key;
+    baru->nama_barang = nama_barang;
+    baru->next = table[index];
+    table[index] = baru;
+
+    cout << "\n[SUKSES] Barang '" << nama_barang << "' berhasil ditambahkan di Rak " << index << "!\n";
+}
+
+Barang *cariBarang(Barang *table[], int key)
+{
+    int index = hashFunction(key);
+    Barang *cur = table[index];
+
+    while (cur != nullptr)
+    {
+        if (cur->key == key)
+        {
+            return cur;
+        }
+        cur = cur->next;
+    }
+    return nullptr;
+}
+
+void hapusBarang(Barang *table[], int key)
+{
+    int index = hashFunction(key);
+    Barang *cur = table[index];
+    Barang *prev = nullptr;
+
+    while (cur != nullptr)
+    {
+        if (cur->key == key)
+        {
+            if (prev == nullptr)
+            {
+                table[index] = cur->next;
+            }
+            else
+            {
+                prev->next = cur->next;
+            }
+            cout << "\n[SUKSES] Barang '" << cur->nama_barang << "' (Kode: " << key << ") berhasil dihapus!\n";
+            delete cur;
+            return;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
+    cout << "\n[ERROR] Barang dengan kode " << key << " tidak ditemukan!\n";
+}
+
+void tampilkanInventory(Barang *table[])
+{
+    cout << "\n====================================================================================\n";
+    cout << "                              INVENTORY WAREHOUSE                                   \n";
+    cout << "====================================================================================\n";
+    cout << left << setw(10) << "RAK" << setw(8) << "KODE" << setw(50) << "NAMA BARANG" << endl;
+    cout << "------------------------------------------------------------------------------------\n";
+
+    bool kosong = true;
+    for (int i = 0; i < SIZE; i++)
+    {
+        Barang *tmp = table[i];
+        if (tmp != nullptr)
+        {
+            kosong = false;
+            while (tmp != nullptr)
+            {
+                cout << left << setw(10) << i
+                     << setw(8) << tmp->key
+                     << setw(50) << tmp->nama_barang << endl;
+                tmp = tmp->next;
+            }
+        }
+    }
+
+    if (kosong)
+    {
+        cout << "                         [Inventory masih kosong]                               \n";
+    }
+    cout << "====================================================================================\n";
+}
+
+void tampilkanDetailBarang(Barang *table[], int key)
+{
+    Barang *barang = cariBarang(table, key);
+    if (barang != nullptr)
+    {
+        int rak = hashFunction(key);
+        cout << "\n========== DETAIL BARANG ==========\n";
+        cout << "Kode Barang : " << barang->key << endl;
+        cout << "Nama Barang : " << barang->nama_barang << endl;
+        cout << "Rak         : " << rak << endl;
+        cout << "===================================\n";
+    }
+    else
+    {
+        cout << "\n[ERROR] Barang dengan kode " << key << " tidak ditemukan!\n";
+    }
+}
+
+void hitungTotalBarang(Barang *table[])
+{
+    int totalItem = 0;
+
+    for (int i = 0; i < SIZE; i++)
+    {
+        Barang *tmp = table[i];
+        while (tmp != nullptr)
+        {
+            totalItem++;
+            tmp = tmp->next;
+        }
+    }
+
+    cout << "\n[INFO] Total Barang : " << totalItem << "\n";
+}
+
+void cariPerRak(Barang *table[], int rak)
+{
+    if (rak < 0 || rak >= SIZE)
+    {
+        cout << "\n[ERROR] Nomor rak tidak valid! (0-" << SIZE - 1 << ")\n";
+        return;
+    }
+
+    cout << "\n========== BARANG DI RAK " << rak << " ==========\n";
+    bool ada = false;
+
+    Barang *tmp = table[rak];
+    while (tmp != nullptr)
+    {
+        cout << "- [" << tmp->key << "] " << tmp->nama_barang << endl;
+        ada = true;
+        tmp = tmp->next;
+    }
+
+    if (!ada)
+    {
+        cout << "Tidak ada barang di Rak " << rak << endl;
+    }
+    cout << "=========================================\n";
+}
+
+void cleanupTable(Barang *table[])
+{
+    for (int i = 0; i < SIZE; i++)
+    {
+        Barang *cur = table[i];
+        while (cur != nullptr)
+        {
+            Barang *temp = cur;
+            cur = cur->next;
+            delete temp;
+        }
+        table[i] = nullptr;
+    }
+}
+
+void menu()
+{
+    cout << "\n+========================================+\n";
+    cout << "|   SISTEM INVENTORY WAREHOUSE v1.0      |\n";
+    cout << "+========================================+\n";
+    cout << "|  1. Tambah Barang Baru                 |\n";
+    cout << "|  2. Cari & Tampilkan Detail Barang     |\n";
+    cout << "|  3. Hapus Barang                       |\n";
+    cout << "|  4. Tampilkan Semua Inventory          |\n";
+    cout << "|  5. Laporan Total Barang               |\n";
+    cout << "|  6. Cari Barang Per Rak                |\n";
+    cout << "|  0. Keluar                             |\n";
+    cout << "+========================================+\n";
+    cout << "Pilih menu: ";
+}
